@@ -5,6 +5,8 @@ Q = 4;
 N_steps = 1000;
 B = 0.1;
 
+
+
 cost_array = zeros(N_steps, 1);
 
 x = randi(Q, NUM_VERTICES, 1);
@@ -18,18 +20,17 @@ for i = 1:NUM_VERTICES
             A(j, i) = 1;
         end
     end
-   
 end
 
 cost_function(A, x)
 
-G = graph(A);
+% G = graph(A);
 
-G.Nodes.NodeColors = x;
+% G.Nodes.NodeColors = x;
 
-P = plot(G, 'MarkerSize', 12);
+% P = plot(G, 'MarkerSize', 12);
 
-P.NodeCData = G.Nodes.NodeColors;
+% P.NodeCData = G.Nodes.NodeColors;
 
 for t=1:N_steps
 %     Copy old color list

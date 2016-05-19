@@ -15,4 +15,3 @@ for vertex = 1:h
 end
 
 cost = cost / 2;
-
