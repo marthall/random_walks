@@ -1,4 +1,4 @@
-NUM_VERTICES = 300;
+NUM_VERTICES = 50;
 C = 10;
 Q = 6;
 N_steps = 1000;

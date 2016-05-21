@@ -1,59 +1,50 @@
 
-NUM_VERTICES = 50;
-C = 10;
-Q = 4;
-N_steps = 1000;
-B = 0.1;
+N_vertices = 1000;
+N_steps = 50000;
+C = 100;
+Q = 5;
 
+colors = randi(Q, N_vertices, 1);
 
+A = zeros(N_vertices);
 
-cost_array = zeros(N_steps, 1);
-
-x = randi(Q, NUM_VERTICES, 1);
-
-A = zeros(NUM_VERTICES);
-
-for i = 1:NUM_VERTICES
-    for j = i+1:NUM_VERTICES
-        if rand() < C / NUM_VERTICES
+for i = 1:N_vertices
+    for j = i+1:N_vertices
+        if rand() < C / N_vertices
             A(i, j) = 1;
             A(j, i) = 1;
         end
     end
 end
 
-cost_function(A, x)
-
+% figure(1);
 % G = graph(A);
-
-% G.Nodes.NodeColors = x;
-
+% G.Nodes.Nodecolors = colors;
 % P = plot(G, 'MarkerSize', 12);
+% P.NodeCData = G.Nodes.Nodecolors;
 
-% P.NodeCData = G.Nodes.NodeColors;
 
-for t=1:N_steps
-%     Copy old color list
-    new_x = x;
-    vertex = randi(NUM_VERTICES);
-    
-%     Select new color
-    old_color = x(vertex);
-    while old_color == new_x(vertex)
-        new_x(vertex) = randi(Q);
-    end
-    
-    cost = cost_function(A, x);
-    new_cost = cost_function(A, new_x);
-    
-    cost_array(t) = cost;
-    
-    delta_H = new_cost - cost;
-    
-    if delta_H <= 0 || rand() > exp(-B * delta_H)
-        x = new_x;
-    end
+B_inits = [0.01 0.001 0.0001 0.00001 0.000001];
+
+cost_arrays = zeros(length(B_inits), N_steps + 1);
+resultColors = zeros(length(B_inits), N_vertices);
+
+for i=1:length(B_inits)
+    [cost_arrays(i,:), resultColors(i,:)] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, B_inits(i));
 end
 
-plot(cost_array);
+figure(2);
+plot(cost_arrays.');
+labels = strtrim(cellstr(num2str(B_inits'))');
+legend(labels, 'Location','northeast')
+
+% figure(3);
+% finalColors = resultColors(end,:);
+% G = graph(A);
+% G.Nodes.Nodecolors = finalColors.';
+% P = plot(G, 'MarkerSize', 12);
+% P.NodeCData = G.Nodes.Nodecolors;
+
+cost_arrays(:,end);
+
 
