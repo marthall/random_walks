@@ -1,9 +1,10 @@
-function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_vertices, N_steps, B )
+function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_vertices, N_steps, B_0, temp_func )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
     colors = initialColors;
-    B_delta = B / N_steps;
+%     B_delta = B / N_steps;
+    B = B_0
 
     costArray = zeros(N_steps + 1, 1);
 
@@ -34,12 +35,28 @@ function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_ve
 
         deltaCost = getDeltaCost(A, vertex, colors, newColors);
 
-        if deltaCost <= 0 || rand() > exp(-B * deltaCost)
+        if deltaCost <= 0 || rand() < exp(-B * deltaCost)
             colors = newColors;
             cost = cost + deltaCost;
         end
 
-        B = B - B_delta;
+        
+        
+        if temp_func == 1
+            B = B_0 * exp(t)^3;
+        elseif temp_func == 2
+            B = B_0 * t;
+        elseif temp_func == 3
+            B = B_0 * log(t);
+        elseif temp_func == 4
+            B = B_0 + 1000*t;
+        elseif temp_func == 5
+            B = B_0 * t^2;
+        elseif temp_func == 6
+            B = B_0 * t*log(t);
+        elseif temp_func == 7
+            B = B_0 * t^4;
+        end
 
         costArray(t+1) = cost;
         
