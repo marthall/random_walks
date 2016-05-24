@@ -1,45 +1,46 @@
 
-N_vertices = 1000;
-N_steps = 50000;
+%% Import from file
+
+A = importdata('graph_adjacency_matrix.mat');
+[N_vertices,~] = size(A);
+N_steps = 1000;
 C = 20;
-Q = 5;
+Q = 3;
 
 colors = randi(Q, N_vertices, 1);
 
-A = zeros(N_vertices);
+%% Create Erdos-Renyi matrix
 
-for i = 1:N_vertices
-    for j = i+1:N_vertices
-        if rand() < C / N_vertices
-            A(i, j) = 1;
-            A(j, i) = 1;
-        end
-    end
-end
+N_vertices = 1000;
+N_steps = 100000;
+C = 20;
+Q = 3;
 
-% figure(1);
-% G = graph(A);
-% G.Nodes.Nodecolors = colors;
-% P = plot(G, 'MarkerSize', 12);
-% P.NodeCData = G.Nodes.Nodecolors;
+colors = randi(Q, N_vertices, 1);
+
+A = ErdosRenyiMatrix(N_vertices, C);
 
 
-B_inits = [0.1 1 10 100 1000 10000];
-func_values = [5 6 7];
-
+%% Test different functions
+B_inits = [100];
+func_values = [8 9 10 11];
 no_lines = length(B_inits) * length(func_values);
-
 cost_arrays = zeros(no_lines, N_steps + 1);
 resultColors = zeros(no_lines, N_vertices);
 
 for i=1:length(B_inits)
     for j=1:length(func_values)
-        [cost_arrays((i-1)*length(func_values)+j,:), resultColors((i-1)*length(func_values)+j,:)] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, B_inits(i), func_values(j));
+        [cost_arrays((i-1)*length(func_values)+j,:), resultColors((i-1)*length(func_values)+j,:), ~, ~] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, B_inits(i), func_values(j));
     end
 end
 
 figure(2);
 plot(cost_arrays.');
+labels = strtrim(cellstr(num2str(func_values'))');
+legend(labels, 'Location','northeast');
+xlabel('$c \in \{1, N \}$','Interpreter','LaTex');
+ylabel('$H(x^t)$', 'Interpreter', 'LaTex');
+
 % labels_int = [];
 % label_no = 1;
 % for i = 1:length(B_inits)
@@ -67,4 +68,35 @@ plot(cost_arrays.');
 
 reshape(cost_arrays(:,end), [length(func_values) length(B_inits)])
 
+
+%% Test different values of Q as a function of C
+
+Qs = [3 4 5 6 7];
+Cs = linspace(1, N_vertices, 20);
+
+colors = zeros(N_vertices, 1);
+
+QC = zeros(length(Qs), length(Cs));
+
+for q = 1:length(Qs)
+    colors = randi(Q, N_vertices, 1);
+    for c = 1:length(Cs)
+        A = ErdosRenyiMatrix(N_vertices, Cs(c));
+        
+        [~, ~, bestCost, ~] = SimulatedAnnealing(A, Cs(c), Qs(q), colors, N_vertices, N_steps, 0, 11);
+        QC(q, c) = bestCost;
+    end
+end
+
+figure(3);
+
+for q=1:length(Qs)
+    plot(Cs, QC(q,:)); hold on;
+end
+hold off;
+labels = strtrim(cellstr(num2str(Qs'))');
+legend(labels, 'Location','northeast');
+title('Erdos-Renyi random graph, $N = 1000$' ,'Interpreter','LaTex');
+xlabel('$c \in \{1, N \}$','Interpreter','LaTex');
+ylabel('$H{min}$','Interpreter','LaTex');
 

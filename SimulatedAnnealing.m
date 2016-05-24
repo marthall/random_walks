@@ -1,24 +1,19 @@
-function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_vertices, N_steps, B_0, temp_func )
+function [ costArray, colors, bestCost, bestColors ] = SimulatedAnnealing(A, C, Q, initialColors, N_vertices, N_steps, B_0, temp_func )
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
     colors = initialColors;
 %     B_delta = B / N_steps;
-    B = B_0
+    B = B_0;
 
     costArray = zeros(N_steps + 1, 1);
 
     cost = cost_function(A, colors);
 
     costArray(1) = cost;
-
-    % G = graph(A);
-    % 
-    % G.Nodes.Nodecolors = colors;
-    % 
-    % P = plot(G, 'MarkerSize', 12);
-    % 
-    % P.NodeCData = G.Nodes.Nodecolors;
+    
+    bestCost = cost;
+    bestColors = colors;
 
     for t=1:N_steps
     %     Copy old colors list
@@ -39,6 +34,11 @@ function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_ve
             colors = newColors;
             cost = cost + deltaCost;
         end
+        
+        if cost < bestCost
+            bestCost = cost;
+            bestColors = colors;
+        end
 
         
         
@@ -56,6 +56,14 @@ function [ costArray, colors ] = SimulatedAnnealing(A, C, Q, initialColors, N_ve
             B = B_0 * t*log(t);
         elseif temp_func == 7
             B = B_0 * t^4;
+        elseif temp_func == 8
+            B = B_0^t;
+        elseif temp_func == 9
+            B = B_0 * t^t;
+        elseif temp_func == 10
+            B =  N_steps / (N_steps - (t-1));
+        elseif temp_func == 11
+            B =  (N_steps / (N_steps - (t-1)))^2;
         end
 
         costArray(t+1) = cost;
