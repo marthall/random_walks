@@ -1,3 +1,15 @@
+%% About the code
+% 
+% While running this code, you have two options:
+% 1) Import matrix from file
+% 2) Generate an Erdos-Renyi matrix
+% 
+% Finding the best coloring of an input graph can be done by running 
+% the "Test different values of Q as a function of C". We have also included
+% the "Test different functions section", which is where we experimented 
+% with the different cooling schedules. 
+
+
 
 %% Import from file
 
@@ -40,31 +52,6 @@ labels = strtrim(cellstr(num2str(func_values'))');
 legend(labels, 'Location','northeast');
 xlabel('$c \in \{1, N \}$','Interpreter','LaTex');
 ylabel('$H(x^t)$', 'Interpreter', 'LaTex');
-
-% labels_int = [];
-% label_no = 1;
-% for i = 1:length(B_inits)
-%     for j = 1:length(func_values)
-% %         l = strcat('B: ' + num2str(B_inits(i)), ' F: ', num2str(func_values(j)));
-%         labels_int = [labels num2str(label_no)];
-%         label_no = label_no + 1;
-%     end
-% end
-% labels = strtrim(cellstr(num2str(labels_int'))');
-% legend(labels, 'Location','northeast')
-
-% figure(3);
-% finalColors = resultColors(end,:);
-% G = graph(A);
-% G.Nodes.Nodecolors = finalColors.';
-% P = plot(G, 'MarkerSize', 12);
-% P.NodeCData = G.Nodes.Nodecolors;
-% 
-% for i=1:length(B_inits)
-%     for j=1:length(func_values)
-%        B_inits(i), func_values(j), cost_arrays((i-1)*length(func_values)+j,end)
-%     end
-% end
 
 reshape(cost_arrays(:,end), [length(func_values) length(B_inits)])
 

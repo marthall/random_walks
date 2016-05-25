@@ -1,9 +1,8 @@
 function [ cost ] = cost_function(A, x)
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+% Computation of the cost of a particular coloring x of the graph A.
 
 cost = 0;
-[h,w] = size(A);
+[h,~] = size(A);
 
 for vertex = 1:h
     color = x(vertex);

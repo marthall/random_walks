@@ -1,10 +1,8 @@
 function [ deltaCost ] = getDeltaCost(aMatrix, vertex, colors, newColors)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+% This is the function were we compute the delta cost for each iteration of
+% the Simulated Annealing Algorithm. 
 
 neighbors = logical(aMatrix(vertex, :));
-
-% conflictingNeighbors = logical(colors(vertex) == colors(neighbors))
 
 oldPartialCost = sum(colors(vertex) == colors(neighbors));
 newPartialCost = sum(newColors(vertex) == newColors(neighbors));

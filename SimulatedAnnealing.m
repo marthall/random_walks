@@ -1,9 +1,7 @@
 function [ costArray, colors, bestCost, bestColors ] = SimulatedAnnealing(A, C, Q, initialColors, N_vertices, N_steps, B_0, temp_func )
-%UNTITLED2 Summary of this function goes here
-%   Detailed explanation goes here
+% The implementation of the Simulated Annealing Algorithm. 
 
     colors = initialColors;
-%     B_delta = B / N_steps;
     B = B_0;
 
     costArray = zeros(N_steps + 1, 1);
