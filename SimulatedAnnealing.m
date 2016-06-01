@@ -16,6 +16,9 @@ function [ costArray, colors, bestCost, bestColors ] = SimulatedAnnealing(A, C, 
     bestColors = colors;
 
     for t=1:N_steps
+        if mod(t, 10000) == 0
+            t
+        end
     %     Copy old colors list
         newColors = colors;
 
