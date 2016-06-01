@@ -3,9 +3,7 @@
 
 A = importdata('matrix.mat');
 [N_vertices,~] = size(A);
-N_steps = 1000;
 C = 20;
-Q = 3;
 
 colors = randi(Q, N_vertices, 1);
 
@@ -22,29 +20,35 @@ A = ErdosRenyiMatrix(N_vertices, C);
 
 
 %% Test different functions
-B_inits = [100];
-func_values = [8 9 10 11];
-no_lines = length(B_inits) * length(func_values);
-cost_arrays = zeros(no_lines, N_steps + 1);
-resultColors = zeros(no_lines, N_vertices);
+% B_inits = [100];
+% func_values = [8 9 10 11];
 
-bestColors = zeros(length(func_values), length(N_vertices));
-bestCost = zeros(length(func_values));
+N_steps = 100000;
+Q = 5;
+[~,~, bCost, bColors] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, 100, 11);
 
-for j=1:length(func_values)
-    [cost_arrays((i-1)*length(func_values)+j,:), resultColors((i-1)*length(func_values)+j,:), bCost, bColors] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, 100, func_values(j));
-    bestColors(j,:) = bColors;gi
-    bestCost(j) = bCost;
-end
+% 
+% no_lines = length(B_inits) * length(func_values);
+% cost_arrays = zeros(no_lines, N_steps + 1);
+% resultColors = zeros(no_lines, N_vertices);
+% 
+% bestColors2 = zeros(length(func_values), length(N_vertices));
+% bestCost2 = zeros(length(func_values));
+% 
+% for j=1:length(func_values)
+%    
+% %     bestColors2(j,:) = bColors;
+%     bestCost2(j) = bCost;
+% end
 
-figure(2);
-plot(cost_arrays.');
-labels = strtrim(cellstr(num2str(func_values'))');
-legend(labels, 'Location','northeast');
-xlabel('$c \in \{1, N \}$','Interpreter','LaTex');
-ylabel('$H(x^t)$', 'Interpreter', 'LaTex');
-
-% labels_int = [];
+% figure(2);
+% plot(cost_arrays.');
+% labels = strtrim(cellstr(num2str(func_values'))');
+% legend(labels, 'Location','northeast');
+% xlabel('$c \in \{1, N \}$','Interpreter','LaTex');
+% ylabel('$H(x^t)$', 'Interpreter', 'LaTex');
+% 
+% % labels_int = [];
 % label_no = 1;
 % for i = 1:length(B_inits)
 %     for j = 1:length(func_values)
@@ -69,7 +73,7 @@ ylabel('$H(x^t)$', 'Interpreter', 'LaTex');
 %     end
 % end
 
-reshape(cost_arrays(:,end), [length(func_values) length(B_inits)])
+% reshape(cost_arrays(:,end), [length(func_values) length(B_inits)])
 
 
 %% Test different values of Q as a function of C
