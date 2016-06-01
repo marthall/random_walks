@@ -1,7 +1,7 @@
 
 %% Import from file
 
-A = importdata('graph_adjacency_matrix.mat');
+A = importdata('matrix.mat');
 [N_vertices,~] = size(A);
 N_steps = 1000;
 C = 20;
@@ -28,10 +28,13 @@ no_lines = length(B_inits) * length(func_values);
 cost_arrays = zeros(no_lines, N_steps + 1);
 resultColors = zeros(no_lines, N_vertices);
 
-for i=1:length(B_inits)
-    for j=1:length(func_values)
-        [cost_arrays((i-1)*length(func_values)+j,:), resultColors((i-1)*length(func_values)+j,:), ~, ~] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, B_inits(i), func_values(j));
-    end
+bestColors = zeros(length(func_values), length(N_vertices));
+bestCost = zeros(length(func_values));
+
+for j=1:length(func_values)
+    [cost_arrays((i-1)*length(func_values)+j,:), resultColors((i-1)*length(func_values)+j,:), bCost, bColors] = SimulatedAnnealing(A, C, Q, colors, N_vertices, N_steps, 100, func_values(j));
+    bestColors(j,:) = bColors;gi
+    bestCost(j) = bCost;
 end
 
 figure(2);
@@ -71,20 +74,22 @@ reshape(cost_arrays(:,end), [length(func_values) length(B_inits)])
 
 %% Test different values of Q as a function of C
 
-Qs = [3 4 5 6 7];
+Qs = [3 4 5];
 Cs = linspace(1, N_vertices, 20);
 
 colors = zeros(N_vertices, 1);
 
 QC = zeros(length(Qs), length(Cs));
+bestColors = zeros(length(Qs), length(Cs));
 
 for q = 1:length(Qs)
     colors = randi(Q, N_vertices, 1);
     for c = 1:length(Cs)
         A = ErdosRenyiMatrix(N_vertices, Cs(c));
         
-        [~, ~, bestCost, ~] = SimulatedAnnealing(A, Cs(c), Qs(q), colors, N_vertices, N_steps, 0, 11);
+        [~, ~, bestCost, bColors] = SimulatedAnnealing(A, Cs(c), Qs(q), colors, N_vertices, N_steps, 0, 11);
         QC(q, c) = bestCost;
+%         bestColors(q, c) = bColors;
     end
 end
 
